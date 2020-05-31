@@ -1,0 +1,33 @@
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char** argv) {
+    MPI_Init(NULL, NULL);
+    int id;
+    MPI_Comm_rank(MPI_COMM_WORLD, &id);
+    int numProc;
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+    int send_buf = id;
+    int recv_buf = 0;
+    int sum = 0;
+    if (id != 0) {
+        MPI_Recv(&recv_buf, 1, MPI_INT, id - 1, 0, MPI_COMM_WORLD,
+            MPI_STATUS_IGNORE);
+        printf("Process %d received sum %d from process %d\n", id, sum,
+            id - 1);
+    }
+    else
+    {
+        sum = -1;
+    }
+    MPI_Send(&recv_buf, 1, MPI_INT, (id + 1) % numProc, 0, 
+        MPI_COMM_WORLD);
+    if (id == 0) {
+        MPI_Recv(&recv_buf, 1, MPI_INT, numProc - 1, 0, MPI_COMM_WORLD,
+            MPI_STATUS_IGNORE);
+        printf("Process %d received sum %d from process %d\n", id, sum,
+            numProc - 1);
+    }
+    MPI_Finalize();
+}
