@@ -1,0 +1,170 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+int main() {
+int n; double a,b,k,mae,sigma,h;
+cin>>n>>a>>b>>k;                       //input N;  [a;b]; accuracy;
+double A[n], B[n], C[n], f[n],d[n],x[2*n+1],x1[2*n+1], y[2*n+1], y1[2*n+1], s[n];
+    h=(b-a)/n;                
+    cout<<"h:= "<<h<<endl;
+
+double j=0;
+cout<<"x[i]: ";
+for (int i=0; i<2*n+1;i++){ //x[i]??
+   j+=0.5;
+   if(i==0) j=0;
+    x[i]=a+j*h;         
+
+cout<<x[i]<<" ";
+}
+cout<<endl;
+cout<< "f[x[i]]:= ";
+for(int i=0;i<2*n+1;i++){
+    y[i]=pow(x[i],3)+7*cos(x[i]);        //function
+cout<<y[i]<<" ";
+}
+cout<<endl;
+    cout<<"A[i]: ";
+for (int i=0; i<n; i++){
+    A[i]+=y[2*i+1];
+    cout<<A[i]<<" ";
+}
+cout<<endl;
+    cout<<"B[i]: ";
+    int q=1;
+for (int i=0; i<n; i++){
+    B[i]+=(y[2*q]-y[2*i])/h;
+    q+=1;
+    cout<<B[i]<<" ";}
+    
+    cout<<endl;
+    int l=1;
+    cout<<"C[i]: ";
+    for (int i=0; i<n; i++){
+        C[i]+=4*(y[2*l]+y[2*i]-2*y[2*i+1])/pow(h,2);
+        l++;
+        cout<<C[i]<<" ";
+    }
+    cout<<endl;
+    cout<<"s[i]: ";
+    for (int i=0; i<n; i++){
+    x1[i]=x[2*i]+(h/k);
+    s[i]=A[i]+B[i]*(x1[i]-x[2*i+1])+(C[i]/2)*(pow(x1[i]-x[2*i+1],2));
+        cout<<s[i]<<" ";
+        
+    }
+cout<<endl;
+for(int i=0;i<2*n+1;i++){
+      x1[i]=x[2*i]+(h/k);
+    y1[i]=pow(x1[i],3)+7*cos(x1[i]);        //function
+}
+
+for(int i=0;i<n;i++){
+    d[i]=abs(y1[i]-s[i]);
+}
+cout<<endl;
+cout<<"Absolute error:= ";
+for(int i=0;i<n;i++)
+    cout <<d[i]<<" ";
+
+
+for(int i=0;i<n;i++)
+    mae=mae+d[i];
+    mae=mae/n;
+
+for(int i=0;i<n;i++)
+    sigma=sigma+pow((d[i]-mae),2);
+    sigma=sqrt(sigma/(n-1));
+
+cout<<endl;
+cout<<"Mean absolute error:= "<<mae;
+cout<<endl;
+cout<<"Sigma:= "<<sigma;
+cout<<endl;
+
+}#include <iostream>
+#include <cmath>
+using namespace std;
+int main() {
+int n; double a,b,k,mae,sigma,h;
+cin>>n>>a>>b>>k;                       //input N;  [a;b]; accuracy;
+double A[n], B[n], C[n], f[n],d[n],x[2*n+1],x1[2*n+1], y[2*n+1], y1[2*n+1], s[n];
+    h=(b-a)/n;                
+    cout<<"h:= "<<h<<endl;
+
+double j=0;
+cout<<"x[i]: ";
+for (int i=0; i<2*n+1;i++){ //x[i]??
+   j+=0.5;
+   if(i==0) j=0;
+    x[i]=a+j*h;         
+
+cout<<x[i]<<" ";
+}
+cout<<endl;
+cout<< "f[x[i]]:= ";
+for(int i=0;i<2*n+1;i++){
+    y[i]=pow(x[i],3)+7*cos(x[i]);        //function
+cout<<y[i]<<" ";
+}
+cout<<endl;
+    cout<<"A[i]: ";
+for (int i=0; i<n; i++){
+    A[i]+=y[2*i+1];
+    cout<<A[i]<<" ";
+}
+cout<<endl;
+    cout<<"B[i]: ";
+    int q=1;
+for (int i=0; i<n; i++){
+    B[i]+=(y[2*q]-y[2*i])/h;
+    q+=1;
+    cout<<B[i]<<" ";}
+    
+    cout<<endl;
+    int l=1;
+    cout<<"C[i]: ";
+    for (int i=0; i<n; i++){
+        C[i]+=4*(y[2*l]+y[2*i]-2*y[2*i+1])/pow(h,2);
+        l++;
+        cout<<C[i]<<" ";
+    }
+    cout<<endl;
+    cout<<"s[i]: ";
+    for (int i=0; i<n; i++){
+    x1[i]=x[2*i]+(h/k);
+    s[i]=A[i]+B[i]*(x1[i]-x[2*i+1])+(C[i]/2)*(pow(x1[i]-x[2*i+1],2));
+        cout<<s[i]<<" ";
+        
+    }
+cout<<endl;
+for(int i=0;i<2*n+1;i++){
+      x1[i]=x[2*i]+(h/k);
+    y1[i]=pow(x1[i],3)+7*cos(x1[i]);        //function
+}
+
+for(int i=0;i<n;i++){
+    d[i]=abs(y1[i]-s[i]);
+}
+cout<<endl;
+cout<<"Absolute error:= ";
+for(int i=0;i<n;i++)
+    cout <<d[i]<<" ";
+
+
+for(int i=0;i<n;i++)
+    mae=mae+d[i];
+    mae=mae/n;
+
+for(int i=0;i<n;i++)
+    sigma=sigma+pow((d[i]-mae),2);
+    sigma=sqrt(sigma/(n-1));
+
+cout<<endl;
+cout<<"Mean absolute error:= "<<mae;
+cout<<endl;
+cout<<"Sigma:= "<<sigma;
+cout<<endl;
+
+}
+
