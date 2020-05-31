@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <time.h>
+#include <omp.h>
+#include <stdlib.h>
+#include <iostream>
+using namespace std;
+#define size 100
+
+int a[size][size];
+int b[size][size];
+int d[size][size];
+int main() {
+	int n = 100;
+	int i, j,k;
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n; j++)
+		{
+			a[i][j] = rand() % 100;
+			b[i][j] = rand() % 100;
+
+		}
+	}
+
+//
+//	for (i = 0; i < n; i++)
+//	{
+//		for (j = 0; j < n; j++)
+//		{
+//			cout << a[i][j] << " ";
+//			
+//
+//	}
+//		cout << endl;
+//	}
+//	cout << endl<<endl;
+//	for (i = 0; i < n; i++)
+//	{
+//		for (j = 0; j < n; j++)
+//		{
+//			cout << b[i][j] << " ";
+//
+//
+//	}
+//	cout << endl;
+//	}
+//	cout << endl;
+//	
+
+
+
+
+
+
+
+
+	
+		
+	double start = omp_get_wtime();
+//#pragma omp parallel  for schedule(static)   private(i,j,k) shared(a,b,d)
+//#pragma omp parallel  for schedule(dynamic)  private(i,j,k) shared(a,b,d)
+//#pragma omp parallel  for schedule(auto)  private(i,j,k) shared(a,b,d)
+
+
+	for (i = 0; i < n; i++){
+	
+	for (j = 0; j < n; j++){
+	
+	for (k = 0; k < n; k++){
+	
+	d[i][j] += a[i][k] * b[k][j];
+				}
+		}
+}
+	
+	
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n; j++)
+		{
+			cout << d[i][j] << " ";
+			
+
+		}
+		cout << endl;
+	}
+
+	cout << "Time: " << omp_get_wtime()  - start;
+	cout << endl;
+	
+	
+	
+}
