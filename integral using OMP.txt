@@ -1,0 +1,30 @@
+#include "pch.h"
+#include <iostream>
+#include <omp.h>
+using namespace std;
+int main()
+{
+
+	for (int j = 1; j < 5; j++) {
+		double In = 0, a = 0, b = 1, Nx = pow(10, 7), sum;
+		double dx = (b - a) / (Nx - 1);
+		int id, numProc;
+		double start = omp_get_wtime();
+#pragma omp parallel num_threads(j) private(id) reduction(+:In)
+		{
+			id = omp_get_thread_num();
+			numProc = omp_get_num_threads();
+			for (int i = (id * Nx) / numProc; i < ((id + 1) * Nx) / numProc; i++) {
+				In += exp(i * dx) * dx;
+			}
+		}
+		cout <<" Integral = "<< In << " \t" << " \n";
+		cout << " Used cores: " << numProc << " \n";
+		cout <<" Calculation time: " << omp_get_wtime() - start << "\t" <<"\n" << endl;
+		
+
+
+	}
+
+
+}
