@@ -1,0 +1,115 @@
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <omp.h>
+#include <string>
+
+using namespace std;
+
+int main(int argc, char* argv[]) {
+#define N 9
+    double diff;
+    double eps = 0.000001;
+    int i, j;
+    double dt, dx, dy, nx, ny;
+    ofstream output;
+    char output_filename[80];
+    double mean;
+    double u[N][N];
+    double w[N][N];
+    cout << " Matrix by " << N << "x" << N << endl;
+    cout << endl;
+    double coeff = 0.5;
+    nx = 30;
+    ny = 30;
+    dx = 2 / (nx - 1);
+    dy = 2 / (ny - 1);
+    dt = 0.001;
+    cout << endl;
+    diff = eps;
+    //initial
+    mean = 0.0;
+    for (i = 1; i < N - 1; i++) {
+        mean = mean + w[i][0];
+    }
+    for (i = 1; i < N - 1; i++) {
+        mean = mean + w[i][N - 1];
+    }
+    for (j = 0; j < N; j++) {
+        mean = mean + w[N - 1][j];
+    }
+    for (j = 0; j < N; j++) {
+        mean = mean + w[0][j];
+    }
+    mean = mean / (double)(2 * N + 2 * N - 4);
+
+    for (i = 1; i < N - 1; i++) {
+        for (j = 1; j < N - 1; j++) {
+            w[i][j] = mean;
+        }
+    }
+    //boundary
+    for (i = 1; i < N - 1; i++) {
+        w[i][0] = 1.0;
+    }
+    for (i = 1; i < N - 1; i++) {
+        w[i][N - 1] = 0.0;
+    }
+    for (j = 0; j < N; j++) {
+        w[N - 1][j] = 0.0;
+    }
+    for (j = 0; j < N; j++) {
+        w[0][j] = 0.0;
+    }
+
+    double st = omp_get_wtime();
+    double finish;
+    if (dt <= (dx * dx) / (4 * coeff)) {
+#pragma omp parallel 
+        {
+            while (eps <= diff) {
+#pragma omp for
+                for (i = 0; i < N; i++) {
+                    for (j = 0; j < N; j++) {
+                        u[i][j] = w[i][j];
+                    }
+                }
+                diff = 0.0;
+#pragma omp for
+                for (i = 1; i < N - 1; i++) {
+                    for (j = 1; j < N - 1; j++) {
+                        w[i][j] = dt * coeff * (((u[i + 1][j] - 2 * u[i][j] + u[i - 1][j]) / (dy * dy)) + ((u[i][j + 1] - 2 * u[i][j] + u[i][j - 1]) / (dx * dx))) + u[i][j];
+                        if (diff < fabs(w[i][j] - u[i][j])) {
+                            diff = fabs(w[i][j] - u[i][j]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    cout << "Time: " << omp_get_wtime() - st << endl;
+    cin >> output_filename;
+
+    output.open(output_filename);
+
+    output << N << "x" << N << endl;
+
+
+
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < N; j++) {
+
+            output << "  " << fixed << setprecision(3) << w[i][j];
+        }
+        output << "\n";
+    }
+    output.close();
+
+    cout << "\n";
+    cout << output_filename;
+    return 0;
+
+}
