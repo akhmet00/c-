@@ -1,0 +1,26 @@
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+int main(int argc, char** argv) {
+    const int PING_PONG_LIMIT = 10;
+
+    MPI_Init(&argc, &argv);
+    int id, numProc;
+    MPI_Comm_rank(MPI_COMM_WORLD, &id);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
+    int dest = (id + 1) % numProc;
+    int source = (id - 1 + numProc) % numProc;
+    int send_buf = id;
+    int recv_buf = 0;
+    int sum = 0;
+    do {
+        MPI_Send(&send_buf, 1, MPI_INT, dest, 0, MPI_COMM_WORLD);
+        printf("%d send %d to process %d \n", id, send_buf, dest);
+        MPI_Recv(&recv_buf, 1, MPI_INT, source, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        sum += recv_buf;
+        send_buf = recv_buf;
+        printf("%d received %d from process %d, \n", id, recv_buf, source, sum);
+    } while (recv_buf != id);
+    MPI_Finalize();
+
+}
